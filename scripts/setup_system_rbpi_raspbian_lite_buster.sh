@@ -1,13 +1,13 @@
 #!/bin/bash
 #******************************************************************************
 # ZYNTHIAN PROJECT: Zynthian Setup Script
-# 
+#
 # Setup a Zynthian Box in a fresh raspbian-lite "buster" image
-# 
+#
 # Copyright (C) 2015-2019 Fernando Moyano <jofemodo@zynthian.org>
 #
 #******************************************************************************
-# 
+#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of
@@ -19,7 +19,7 @@
 # GNU General Public License for more details.
 #
 # For a full copy of the GNU General Public License see the LICENSE.txt file.
-# 
+#
 #******************************************************************************
 
 source zynthian_envars.sh
@@ -36,14 +36,14 @@ apt-get -y upgrade
 apt-get -y dist-upgrade
 
 # Install required dependencies if needed
-apt-get -y install apt-utils apt-transport-https rpi-update sudo software-properties-common parted dirmngr rpi-eeprom
+apt-get -y install apt-utils apt-transport-https sudo software-properties-common parted dirmngr rpi-eeprom
 #htpdate
 
 # Set here default config
-[ -n "$ZYNTHIAN_INCLUDE_RPI_UPDATE" ] || ZYNTHIAN_INCLUDE_RPI_UPDATE=yes
+[ -n "$ZYNTHIAN_INCLUDE_RPI_UPDATE" ] || ZYNTHIAN_INCLUDE_RPI_UPDATE=no
 [ -n "$ZYNTHIAN_INCLUDE_PIP" ] || ZYNTHIAN_INCLUDE_PIP=yes
-[ -n "$ZYNTHIAN_CHANGE_HOSTNAME" ] || ZYNTHIAN_CHANGE_HOSTNAME=yes
-[ -n "$ZYNTHIAN_SYS_REPO" ] || ZYNTHIAN_SYS_REPO=https://github.com/zynthian/zynthian-sys.git
+[ -n "$ZYNTHIAN_CHANGE_HOSTNAME" ] || ZYNTHIAN_CHANGE_HOSTNAME=no
+[ -n "$ZYNTHIAN_SYS_REPO" ] || ZYNTHIAN_SYS_REPO=https://github.com/pigatron-industries/zynthian-sys.git
 [ -n "$ZYNTHIAN_SYS_BRANCH" ] || ZYNTHIAN_SYS_BRANCH=master
 
 # Adjust System Date/Time
@@ -136,7 +136,7 @@ pip3 install mido python-rtmidi
 
 #************************************************
 #------------------------------------------------
-# Create Zynthian Directory Tree & 
+# Create Zynthian Directory Tree &
 # Install Zynthian Software from repositories
 #------------------------------------------------
 #************************************************
@@ -154,28 +154,28 @@ git clone -b ""${ZYNTHIAN_SYS_BRANCH}"" "${ZYNTHIAN_SYS_REPO}"
 $ZYNTHIAN_RECIPE_DIR/install_wiringpi.sh
 
 # Zyncoder library
-cd $ZYNTHIAN_DIR
-git clone https://github.com/zynthian/zyncoder.git
-./zyncoder/build.sh
+# cd $ZYNTHIAN_DIR
+# git clone https://github.com/zynthian/zyncoder.git
+# ./zyncoder/build.sh
 
 # Zynthian UI
-cd $ZYNTHIAN_DIR
-git clone https://github.com/zynthian/zynthian-ui.git
-if [ -d "zynthian-ui/jackpeak" ]; then
-	./zynthian-ui/jackpeak/build.sh
-fi
+# cd $ZYNTHIAN_DIR
+# git clone https://github.com/zynthian/zynthian-ui.git
+# if [ -d "zynthian-ui/jackpeak" ]; then
+# 	./zynthian-ui/jackpeak/build.sh
+# fi
 
 # Zynthian Data
 cd $ZYNTHIAN_DIR
 git clone https://github.com/zynthian/zynthian-data.git
 
 # Zynthian Webconf Tool
-cd $ZYNTHIAN_DIR
-git clone https://github.com/zynthian/zynthian-webconf.git
+# cd $ZYNTHIAN_DIR
+# git clone https://github.com/zynthian/zynthian-webconf.git
 
 # Zynthian emuface => Not very useful here ... but somebody used it
-cd $ZYNTHIAN_DIR
-git clone https://github.com/zynthian/zynthian-emuface.git
+# cd $ZYNTHIAN_DIR
+# git clone https://github.com/zynthian/zynthian-emuface.git
 
 # Create more needed directories
 mkdir "$ZYNTHIAN_DATA_DIR/soundfonts"
@@ -219,8 +219,8 @@ if [ "$ZYNTHIAN_CHANGE_HOSTNAME" == "yes" ]; then
 fi
 
 # Run configuration script
-$ZYNTHIAN_SYS_DIR/scripts/update_zynthian_data.sh
-$ZYNTHIAN_SYS_DIR/scripts/update_zynthian_sys.sh
+# $ZYNTHIAN_SYS_DIR/scripts/update_zynthian_data.sh
+# $ZYNTHIAN_SYS_DIR/scripts/update_zynthian_sys.sh
 
 # Configure Systemd Services
 systemctl daemon-reload
@@ -232,7 +232,7 @@ systemctl disable rsyslog
 systemctl disable ntp
 systemctl disable htpdate
 systemctl disable triggerhappy
-systemctl disable wpa_supplicant
+systemctl enable wpa_supplicant
 systemctl disable hostapd
 systemctl disable dnsmasq
 systemctl disable unattended-upgrades
@@ -243,15 +243,15 @@ systemctl mask packagekit
 systemctl mask polkit
 #systemctl disable serial-getty@ttyAMA0.service
 #systemctl disable sys-devices-platform-soc-3f201000.uart-tty-ttyAMA0.device
-systemctl enable backlight
+# systemctl enable backlight
 systemctl enable cpu-performance
-systemctl enable splash-screen
+# systemctl enable splash-screen
 systemctl enable wifi-setup
 systemctl enable jack2
 systemctl enable mod-ttymidi
 systemctl enable a2jmidid
-systemctl enable zynthian
-systemctl enable zynthian-webconf
+# systemctl enable zynthian
+# systemctl enable zynthian-webconf
 
 # Setup loading of Zynthian Environment variables ...
 echo "source $ZYNTHIAN_CONFIG_DIR/zynthian_envars.sh" >> /root/.bashrc
@@ -259,7 +259,7 @@ echo "source $ZYNTHIAN_CONFIG_DIR/zynthian_envars.sh" >> /root/.bashrc
 echo "source $ZYNTHIAN_SYS_DIR/etc/profile.zynthian" >> /root/.profile
 
 # On first boot, resize SD partition, regenerate keys, etc.
-$ZYNTHIAN_SYS_DIR/scripts/set_first_boot.sh
+# $ZYNTHIAN_SYS_DIR/scripts/set_first_boot.sh
 
 
 #************************************************
@@ -418,7 +418,7 @@ if [ ! -d "$ZYNTHIAN_CONFIG_DIR/updates" ]; then
 fi
 
 # Run configuration script before ending
-$ZYNTHIAN_SYS_DIR/scripts/update_zynthian_sys.sh
+# $ZYNTHIAN_SYS_DIR/scripts/update_zynthian_sys.sh
 
 #************************************************
 #------------------------------------------------
